@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="it-IT">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ValtellinaNews - Progetto Esame PWM</title>
+
+        <!--Stylesheet-->
+        <link rel="stylesheet" href="./css/standard.css">
+
+        <!--Google Maps-->
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+        <header id="header">
+            <!--Logo-->
+            <div class="logo">
+                <img src="" class="img-logo" alt="logo website" loading="lazy">
+            </div>
+        
+            <!--Title-->
+            <div id="title">
+                <h1>Info Valtellina</h1>
+            </div>
+        
+            <!--Menu a tendina smartphone
+                    <div class="hamburger">
+                        <span></span><span></span><span></span>
+                    </div>-->
+        </header>
+        
+        <!-- HomePage -->
+        <div id="homepage">
+        
+            <div id="news">
+                <h1>News</h1>
+                <div class="post-news">
+                    <% if(articles !=null) { %>
+                        <% articles.forEach(function(article, index) { %>
+                            <a href="/article/<%- article.title %>" class="news__card">
+                                <p>
+                                    <%- article.title %>
+                                </p>
+                            </a>
+                            <hr/>
+                            <% }) %>
+                                <% } else { %>
+                                    No posts found.
+                                    <% } %>
+                </div>
+            </div>
+        
+            <div id="centralBody">
+                <div class="ultimeNews">
+                    <h1>Ultime</h1>
+                </div>
+                <div class="meteoMap">
+                    <div id="map"></div>
+                </div>
+            </div>
+        
+            <div id="lateralBar">
+                <div class="radioPlayer">
+                    <h2>Radio TSN</h2>
+                    <iframe id="ascolta" src="https://player.streamshow.it/embed/tsnradio.php?" autoplay="0" frameborder="0" marginwidth="0" marginheight="0" width="100%" height="45"></iframe>
+                </div>
+                <div class="others">
+                    <h1>Others</h1>
+                </div>
+            </div>
+        
+        </div>
+        
+
+        <script src="script/map.js"></script>
+    </body>
+
+</html>
