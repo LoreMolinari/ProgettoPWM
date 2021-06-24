@@ -1,0 +1,27 @@
+<div class="geolocation">
+    <div id="geolocationWeather">
+        <% if(geolocationWeather !=null) { %>
+            <div class="geolocWeather__card">
+                <p>
+                    <b>
+                        <%- city.name %>
+                    </b>
+                    </br>
+                    <%- city.weather[0].main %>
+                        <%- city.weather[0].description %>
+                            </br>temperatura: <%- city.main.temp %> °C, percepita: <%- city.main.feels_like %> °C
+                                    </br>vento: <%- city.wind.speed %> m/s, umidità: <%- city.main.humidity %>%
+                                            </br><img src="<%- " https://openweathermap.org/img/w/" +
+                                                city.weather[0].icon + ".png" %>" alt="" width="25px" height="25px">
+                </p>
+            </div>
+            <% if(index !=7){%>
+                <hr />
+                <% }%>
+                    <% }) %>
+                        <% } else { %>
+                            No posts found.
+                            <% } %>
+    </div>
+</div>
+</div>

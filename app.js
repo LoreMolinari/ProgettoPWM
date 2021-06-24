@@ -1,5 +1,5 @@
 const express = require('express')
-const fs = require('fs')
+const fs = require('fs').promises
 const axios = require('axios')
 
 const news = require('./script/news')
@@ -7,10 +7,6 @@ const weather = require('./script/weather')
 
 const app = express()
 const port = 5000
-
-let totalPages;
-const maxPages = 50;
-const pageSize = 10;
 
 //Specifico che utilizzo ejs
 app.set('views', './public')
@@ -25,62 +21,70 @@ const newsRouter = require('./src/routes/news')
 app.use('/', newsRouter)
 app.use('/article', newsRouter)*/
 
-//news.getNews();
+weather.getWeather()
+news.getNews()
 
-/*ricevo le news
-const goToNews = async (req, res, result) => {
-    console.log(result)
-    try{
-        res.render('index.ejs', { articles: result.articles })
-        
-    } catch (err) {
-        if (err.response) {
-            res.render('index.ejs', { articles: null })
-            console.log(err.response.data)
-            console.log(err.response.status)
-            console.log(err.response.headers)
-        } else if (err.requiest) {
-            res.render('index.ejs', { articles: null })
-            console.log(err.requiest)
-        } else {
-            res.render('index.ejs', { articles: null })
-            console.error('Error', err.message)
-        }
-    }
-    //res.render(__dirname + '/public/index.ejs', { title: "News Section", result: result });
-}*/
-
-const goToNews = async (req, res) => {
+const renderHome = async (req, res) => {
     try {
-        const newsAPI = await axios.get('https://newsapi.org/v2/everything?q=Valtellina&sortBy=publishedAt&language=it&apiKey=e6a80fa766a64766a79e31bdfef38a6f')
-            .then((response) => {
-                return response
-            })
-        res.render('index', { articles: newsAPI.data.articles })
+        twitAPI = JSON.parse(await fs.readFile(__dirname + '/script/json/twitt.json', 'utf8', (error, data) => {
+            if (err) {
+                console.error(err)
+            }
+
+            return data
+        }))
+
+
+        weatherAPI = JSON.parse(await fs.readFile(__dirname + '/script/json/weather.json', 'utf8', (err, data) => {
+            if (err) {
+                console.error(err)
+            }
+
+            return data
+        }))
+
+
+        newsAPI = JSON.parse(await fs.readFile(__dirname + '/script/json/news.json', 'utf8', (err, data) => {
+            if (err) {
+                console.error(err)
+            }
+
+            return data
+        }))
+        res.render('index', { twitt: twitAPI.statuses, weather: weatherAPI.list, articles: newsAPI.articles })
     } catch (err) {
-        if (err.response) {
-            res.render('index', { articles: null })
-            console.log(err.response.data)
-            console.log(err.response.status)
-            console.log(err.response.headers)
-        } else if (err.requiest) {
-            res.render('index', { articles: null })
-            console.log(err.requiest)
-        } else {
-            res.render('index', { articles: null })
-            console.error('Error', err.message)
-        }
+        res.render('index', { twitt: null, weather: null, articles: null })
+        console.error('Error: ', err)
     }
 }
 
+const renderGeo = async (req, res) => {
+    if (navigator.geolocation) {
+        try {
+            const position = navigator.geolocation.getCurrentLocation()
+            const lat = position.coords.latitude
+            const lon = position.coords.longitude
 
+            const result = await axios.get('https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=minutely,hourly,daily,alerts&appid=118da32ae6600e2bc26a348e52bc4522&lang=it&units=metric')
+            .then((response) => {
+                return response
+            })
 
-//weather.getWeather()
+            console.log(result)
+        } catch {
+
+        }
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+
+    
+}
 
 //gestisco index.ejs
-app.get('/', goToNews);
+app.get('/', renderHome)
 
-
+app.get('/geolocation', renderGeo)
 
 
 // Listen on port 5000

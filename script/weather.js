@@ -2,7 +2,7 @@ const fs = require("fs")
 const axios = require('axios')
 
 exports.getWeather = () => {
-    axios.get('https://api.openweathermap.org/data/2.5/onecall?lat=46.4684&lon=10.3721&exclude=minutely,hourly,alerts&appid=118da32ae6600e2bc26a348e52bc4522&lang=it&units=metrics')
+    axios.get('https://api.openweathermap.org/data/2.5/group?id=3181730,3174664,3166398,3165647,6539617,3178808,3172617,3178829&appid=118da32ae6600e2bc26a348e52bc4522&lang=it&units=metric')
         .then((response) => {
             data = JSON.stringify(response.data)
             return data
