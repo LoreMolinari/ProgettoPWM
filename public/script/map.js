@@ -2,7 +2,7 @@ var map;
 var geoJSON;
 var request;
 var gettingData = false;
-let openWeatherMapKey = "9a4587a0f83d35f36a7754df073c1553"
+const openWeatherMapKey = "9a4587a0f83d35f36a7754df073c1553"
 
 
 function initialize() {
@@ -14,7 +14,7 @@ function initialize() {
     map = new google.maps.Map(document.getElementById('map'),
         mapOptions);
 
-    // Sets up and populates the info window with details
+    // Inzializzazione e popolazione pop-up marker mappa meteo
     map.data.addListener('click', function (event) {
         infowindow.setContent(
             "<img src=" + event.feature.getProperty("icon") + ">"
@@ -40,11 +40,11 @@ function initialize() {
 
 
 
-// Make the weather request BassaValtellina
+// Richiesta meteo BassaValtellina
 var getWeather = function () {
     gettingData = true;
     var requestString = "https://api.openweathermap.org/data/2.5/find?"
-        +"lat=46.264396692438055&lon=9.85011883588303&cnt=40&lang=it&units=metric"
+        + "lat=46.264396692438055&lon=9.85011883588303&cnt=40&lang=it&units=metric"
         + "&APPID=" + openWeatherMapKey;
     request = new XMLHttpRequest();
     request.onload = proccessResults;
@@ -54,7 +54,7 @@ var getWeather = function () {
     getWeather2();
 };
 
-// Make the weather request AltaValtellina
+// Richiesta meteo AltaValtellina
 var getWeather2 = function () {
     gettingData = true;
     var requestString = "https://api.openweathermap.org/data/2.5/find?"
@@ -69,7 +69,7 @@ var getWeather2 = function () {
 };
 
 
-// Make the weather request Valchiavenna
+// Richiesta meteo Valchiavenna
 var getWeather3 = function () {
     gettingData = true;
     var requestString = "https://api.openweathermap.org/data/2.5/find?"
@@ -81,7 +81,7 @@ var getWeather3 = function () {
     request.send();
 };
 
-// Take the JSON results and proccess them
+// Elaborazione JSON
 var proccessResults = function () {
     console.log(this);
     var results = JSON.parse(this.responseText);
@@ -96,13 +96,13 @@ var proccessResults = function () {
 
 var infowindow = new google.maps.InfoWindow();
 
-// For each result that comes back, convert the data to geoJSON
+// Conversione di ogni dato in geoJSON per API google
 var jsonToGeoJson = function (weatherItem) {
     var feature = {
         type: "Feature",
         properties: {
             city: weatherItem.name,
-            weather: weatherItem.weather[0].description, //italiano
+            weather: weatherItem.weather[0].description, //italiano (per Inglese weatherItem.weather[0].main)
             temperature: weatherItem.main.temp,
             min: weatherItem.main.temp_min,
             max: weatherItem.main.temp_max,
@@ -119,7 +119,7 @@ var jsonToGeoJson = function (weatherItem) {
             coordinates: [weatherItem.coord.lon, weatherItem.coord.lat]
         }
     };
-    // Set the custom marker icon
+    // Marker icona meteo
     map.data.setStyle(function (feature) {
         return {
             icon: {
@@ -129,23 +129,23 @@ var jsonToGeoJson = function (weatherItem) {
         };
     });
 
-    // returns object
+    // ritorno il marker
     return feature;
 };
 
-// Add the markers to the map
+// Aggiungo i marker sulla mappa
 var drawIcons = function (weather) {
     map.data.addGeoJson(geoJSON);
-    // Set the flag to finished
     gettingData = false;
 };
 
-// Clear data layer and geoJSON
+//Pulizia marker
 var resetData = function () {
     geoJSON = {
         type: "FeatureCollection",
         features: []
     };
+    // è possibile rimuovere i marker una volta visualizzati
     /*map.data.forEach(function (feature) {
         map.data.remove(feature);
     });*/

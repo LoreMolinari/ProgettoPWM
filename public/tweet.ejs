@@ -1,0 +1,16 @@
+<div class="tweet">
+    <h1>Ultimi Tweet</h1>
+    <% if(twitt !=null) { %>
+        <% twitt.forEach(function(tweet, index) {%>
+            <a href="https://twitter.com/i/web/status/<%- tweet.id_str %>" target="_blank" class="tweet__card">
+                <p>
+                    <%- tweet.text %>
+                </p>
+            </a>
+            <hr />
+            <% }) %>
+                <% } else { %>
+                    No Tweet found.
+                    <% } %>
+
+</div>

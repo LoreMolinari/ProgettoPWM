@@ -1,0 +1,19 @@
+<div id="contentNews">
+    <p id="contentNews_source"> <%- article.source.name %></p>
+    <h2>
+        <%- article.title %>
+    </h2>
+    <p>
+        <%- article.description %>
+    </p>
+
+    <div id="newsIMG">
+        <img class="newsImg" src="<%- article.urlToImage %>" alt="<%- article.title %>">
+    </div>
+    
+    <a href="<%- article.url %>" target="_blank">
+        <%- article.url %>
+    </a>
+
+</div>
+

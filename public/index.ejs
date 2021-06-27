@@ -8,26 +8,32 @@
     <title>ValtellinaNews - Progetto Esame PWM</title>
 
     <!--Stylesheet-->
-    <link rel="stylesheet" href="./css/standard.css">
+    <link rel="stylesheet" href="/css/standard.css">
 
     <!--Google Maps-->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
 
+    <!--Font-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Concert+One&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <!-- Header -->
     <header id="header">
-        <!--Logo-->
-        <div class="logo">
-            <img src="" class="img-logo" alt="logo website" loading="lazy">
-        </div>
-
         <!--Title-->
         <div id="title">
-            <h1>Info Valtellina</h1>
+            <h1 class="big-text text-white">Info Valtellina</h1>
+        </div>
+
+        <div>
+            <button class="button-transparent" onclick="home()">Update</button>
+            <button class="button-transparent" onclick="geolocation()">Meteo Posizione</button>
         </div>
 
         <!--Menu a tendina smartphone
@@ -38,17 +44,20 @@
 
     <!-- HomePage -->
     <div id="homepage">
-
-        <div id="news">
-            <h1>News</h1>
+        <div id="news" class="flex-width45">
+            <h1>Ultime News</h1>
+            <!-- Gestisco la formattazione e pubblicazione delle news nella barra laterale sinistra -->
             <div class="post-news">
                 <% if(articles !=null) { %>
                     <% articles.forEach(function(article, index) { %>
-                        <a href="/article/<%- article.title %>" class="news__card">
-                            <p>
+                        <a href="/article/<%- article.title %>">
+                            <p class="normal-text">
                                 <%- article.title %>
                             </p>
                         </a>
+                        <p class="news_source">
+                            <%- article.source.name %>
+                        </p>
                         <hr />
                         <% }) %>
                             <% } else { %>
@@ -58,63 +67,68 @@
         </div>
 
 
-        <div id="centralBody">
-            <div class="lastTweet">
-                <h1>Ultime</h1>
-                <% if(twitt !=null) { %>
-                    <% twitt.forEach(function(tweet, index) {%>
-                        <a href="https://twitter.com/i/web/status/<%- tweet.id_str %>" target="_blank" class="tweet__card">
-                            <p>
-                                <%- tweet.text %>
-                            </p>
-                        </a>
-                        <hr />
-                    <% }) %>
-                    <% } else { %>
-                        No Tweet found.
-                    <% } %>
+        <div id="centralBody" class="flex-width70">
+            <!-- Gestisco la formattazione e pubblicazione dei tweet o delle notizie nella parte centrale della pagina -->
+            <div class="tweetAndNews">
+                <%- include(centralContent) -%>
             </div>
+            <!-- Mappa -->
             <div class="meteoMap">
                 <div id="map"></div>
             </div>
         </div>
 
-        <div id="lateralBar">
+        <div id="lateralBar" class="flex-width60">
+            <!-- Player Radio -->
             <div class="radioPlayer">
-                <h2>Radio TSN</h2>
-                <iframe id="ascolta" src="https://player.streamshow.it/embed/tsnradio.php?" autoplay="0" frameborder="0"
-                    marginwidth="0" marginheight="0" width="100%" height="45"></iframe>
+                <a href="https://www.radiotsn.tv/" target="_blank" class="linkRadio">
+                    <h1>Radio TSN</h1>
+                </a>
+                <iframe id="ascolta" src="https://player.streamshow.it/embed/tsnradio.php?"></iframe>
             </div>
+            <!-- Gestisco la formattazione e pubblicazione del meteo nella barra laterale destra -->
             <div class="others">
-                <div class="post-weather">
-                    <% if(weather !=null) { %>
-                        <% weather.forEach(function(city, index) { %>
-                            <div class="weather__card">
-                                <p>
-                                    <b>
-                                        <%- city.name %>
-                                    </b>
-                                    <%- city.weather[0].main %>
-                                        <%- city.main.temp %> °C
-                                            <img src="<%- " https://openweathermap.org/img/w/" + city.weather[0].icon + ".png" %>"
-                                            alt="" width="25px" height="25px">
-                                </p>
-                            </div>
-                            <% if(index !=7){%>
-                                <hr />
-                                <% }%>
-                                    <% }) %>
-                                        <% } else { %>
-                                            No posts found.
-                                            <% } %>
-                </div>
+                <%- include(content) -%>
             </div>
         </div>
 
     </div>
 
+    <!-- eseguo scipt per mappa meteo -->
+    <script src="/script/map.js"></script>
+    <script>
+        //eseguo lo script per il ritrno alla home
+        function home(){
+            window.location.replace("/");
+        }
 
-    <script src="script/map.js"></script>
+        //eseguo script per ricerca meteo in base alla posizione
+        function geolocation() {
+            if (navigator.geolocation) {
+                try {
+                    const position = navigator.geolocation.getCurrentPosition(success, error)
+
+                    function success(pos) {
+                        const lat = pos.coords.latitude
+                        const lon = pos.coords.longitude
+
+                        window.location.replace("/geolocation?lat=" + lat + "&lon=" + lon);
+                    }
+
+                    function error(error) {
+                        console.log(error)
+                        alert("Errore, impossibile recuperare la posizione");
+                    }
+                } catch (error) {
+                    console.log(error)
+                    alert("Errore, impossibile recuperare la posizione");
+                }
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+                alert("Geolocation is not supported by this browser.");
+            }
+        };
+    </script>
 </body>
 
 </html>

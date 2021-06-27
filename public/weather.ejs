@@ -1,0 +1,55 @@
+<div class="post-weather">
+    <% if(weather !=null) { %>
+        <% weather.forEach(function(city, index) { %>
+            <div class="weather__card">
+                <p>
+                    <%  var website = null
+                        switch(city.name) {
+                            case "Bormio":
+                            website = "https://www.comune.bormio.so.it/";
+                            break;
+                            case "Livigno":
+                            website = "https://www.comune.livigno.so.it/";
+                            break;
+                            case "Sondalo":
+                            website = "https://www.comune.sondalo.so.it/";
+                            break;
+                            case "Tirano":
+                            website = "http://www.comune.tirano.so.it/";
+                            break;
+                            case "Sondrio":
+                            website = "https://www.comune.sondrio.it/";
+                            break;
+                            case "Chiesa in Valmalenco":
+                            website = "http://www.comune.chiesainvalmalenco.gov.it/";
+                            break;
+                            case "Morbegno":
+                            website = "https://comune.morbegno.so.it/";
+                            break;
+                            case "Chiavenna":
+                            website = "https://www.comune.chiavenna.so.it/";
+                            break;
+                            default:
+                            website = null
+                        } %>
+
+                    <img src="<%- " https://openweathermap.org/img/w/" + city.weather[0].icon + ".png" %>"
+                    alt="" width="25px" height="25px" style="margin-right: 20px">
+                    <a href="<%- website %>" target="_blank" style="margin-right: 20px;">
+                        <b>
+                            <%- city.name %>
+                        </b>
+                    </a>
+                    <%- city.weather[0].main %>
+                        <%- Math.round(parseInt(city.main.temp)) %> °C
+                            
+                </p>
+            </div>
+            <% if(index !=7){%>
+                <hr />
+                <% }%>
+                    <% }) %>
+                        <% } else { %>
+                            No posts found.
+                            <% } %>
+</div>
